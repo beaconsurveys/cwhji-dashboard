@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CWHJI · Season 2025–2026 · Statistics Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
+// Recommendations
+donut('recDoughnut',
+  ['Sort + Reconditioning','Back in stack','Fumigation','Reconditioning','Other'],
+  [272,114,31,10,2],
+  ['#1A2B4A','#0B6B6B','#B8860B','#1E5A9C','#8A9AB0']);
+
+donut('recAllDoughnut',
+  ['Sort + Reconditioning','Back in stack','Fumigation','Reconditioning','Other','Not yet surveyed'],
+  [272,114,31,10,2,112],
+  ['#1A2B4A','#0B6B6B','#B8860B','#1E5A9C','#8A9AB0','#EDF0F5']);
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+  :root {
+    --navy:#1A2B4A; --navyMid:#243660; --gold:#B8860B; --goldLt:#D4A017;
+    --white:#FFFFFF; --off:#F5F7FA; --stone:#EDF0F5; --border:#D8DDE8;
+    --text:#1A2B4A; --muted:#5A6A7E; --light:#8A9AB0;
+    --green:#1A6B45; --red:#B5303A; --amber:#C87800; --blue:#1E5A9C; --teal:#0B6B6B;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:224px;background:var(--navy);display:flex;flex-direction:column;z-index:100;border-right:1px solid rgba(255,255,255,0.06);}
+  .sidebar-brand{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .brand-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--white);letter-spacing:-0.3px;line-height:1.1;}
+  .brand-sub{font-size:10px;color:var(--goldLt);letter-spacing:1.8px;text-transform:uppercase;margin-top:4px;font-weight:500;}
+  .sidebar-section{padding:16px 14px 5px;font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 18px;color:rgba(255,255,255,0.55);font-size:12.5px;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;text-decoration:none;}
+  .nav-item:hover{color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.05);}
+  .nav-item.active{color:var(--white);background:rgba(255,255,255,0.08);border-left-color:var(--goldLt);font-weight:500;}
+  .nav-icon{font-size:14px;width:16px;text-align:center;}
+  .sidebar-footer{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);font-size:9px;color:rgba(255,255,255,0.22);line-height:1.55;}
+
+  /* MAIN */
+  .main{margin-left:224px;min-height:100vh;display:flex;flex-direction:column;}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 30px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .topbar-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--navy);}
+  .topbar-meta{display:flex;align-items:center;gap:18px;font-size:11px;color:var(--light);}
+  .badge{background:var(--navy);color:var(--white);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+  .badge.gold{background:var(--gold);}
+  .content{padding:26px 30px 40px;flex:1;}
+
+  .section{display:none;}
+  .section.active{display:block;}
+
+  /* KPI */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+  .kpi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;transition:box-shadow 0.2s;}
+  .kpi-card:hover{box-shadow:0 4px 18px rgba(26,43,74,0.08);}
+  .kpi-accent{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:10px 0 0 10px;}
+  .kpi-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--light);margin-bottom:7px;}
+  .kpi-value{font-family:'DM Serif Display',serif;font-size:25px;color:var(--navy);line-height:1;margin-bottom:3px;}
+  .kpi-sub{font-size:11px;color:var(--muted);}
+
+  /* CARDS */
+  .chart-row{display:grid;gap:14px;margin-bottom:14px;}
+  .cols-2{grid-template-columns:1fr 1fr;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .cols-1-2{grid-template-columns:1fr 2fr;}
+  .cols-2-1{grid-template-columns:2fr 1fr;}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:box-shadow 0.2s;}
+  .card:hover{box-shadow:0 4px 18px rgba(26,43,74,0.07);}
+  .card-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:3px;}
+  .card-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+  .card-sub{font-size:11px;color:var(--light);margin-bottom:14px;}
+  .chart-wrap{position:relative;}
+  .chart-wrap canvas{display:block;}
+
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;font-size:11.5px;}
+  .data-table th{background:var(--navy);color:var(--white);padding:8px 12px;text-align:left;font-size:10px;font-weight:600;letter-spacing:0.3px;}
+  .data-table th:first-child{border-radius:6px 0 0 0;}
+  .data-table th:last-child{border-radius:0 6px 0 0;}
+  .data-table td{padding:7px 12px;border-bottom:1px solid var(--stone);color:var(--text);}
+  .data-table tr:nth-child(even) td{background:var(--off);}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table .num{text-align:right;font-weight:600;}
+  .high{color:var(--red)!important;font-weight:700!important;}
+  .low{color:var(--green)!important;font-weight:700!important;}
+  .mid{color:var(--amber)!important;font-weight:600!important;}
+
+  /* PROGRESS */
+  .prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+  .prog-label{width:130px;font-size:11px;color:var(--muted);flex-shrink:0;}
+  .prog-track{flex:1;height:8px;background:var(--stone);border-radius:4px;overflow:hidden;}
+  .prog-fill{height:100%;border-radius:4px;}
+  .prog-val{font-size:11px;font-weight:600;color:var(--navy);min-width:36px;text-align:right;}
+
+  /* INSIGHT */
+  .insight{background:#EEF4FB;border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:9px 13px;margin:10px 0 0;font-size:11.5px;color:var(--text);line-height:1.6;}
+  .insight strong{color:var(--navy);}
+  .insight.amber{background:#FFF8EE;border-left-color:var(--amber);}
+  .insight.green{background:#EEF8F3;border-left-color:var(--green);}
+
+  /* SECTION */
+  .section-heading{font-family:'DM Serif Display',serif;font-size:21px;color:var(--navy);margin-bottom:3px;}
+  .section-desc{font-size:11.5px;color:var(--light);margin-bottom:20px;}
+
+  /* LEGEND */
+  .legend{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:8px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+  .legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+  /* INFEST BAR inline in table */
+  .mini-bar-track{width:80px;height:7px;background:var(--stone);border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle;}
+  .mini-bar-fill{height:100%;border-radius:4px;}
+
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">CWHJI / Beacon</div>
+    <div class="brand-sub">Season 2025–2026</div>
+  </div>
+
+  <div class="sidebar-section">Overview</div>
+  <a class="nav-item active" onclick="showSection('overview',this)"><span class="nav-icon">◉</span> Executive Summary</a>
+  <a class="nav-item" onclick="showSection('cargo',this)"><span class="nav-icon">⬡</span> Cargo Condition</a>
+
+  <div class="sidebar-section">Analysis</div>
+  <a class="nav-item" onclick="showSection('origins',this)"><span class="nav-icon">◈</span> Origins & Damage</a>
+  <a class="nav-item" onclick="showSection('logistics',this)"><span class="nav-icon">◫</span> Shipping & Warehouses</a>
+  <a class="nav-item" onclick="showSection('insured',this)"><span class="nav-icon">◪</span> Insured Parties</a>
+  <a class="nav-item" onclick="showSection('recommendations',this)"><span class="nav-icon">◩</span> Recommendations</a>
+  <a class="nav-item" onclick="showSection('status',this)"><span class="nav-icon">◧</span> File Status</a>
+
+  <div class="sidebar-section">Survey Data</div>
+  <a class="nav-item" onclick="showSection('infestation',this)"><span class="nav-icon">◭</span> Infestation</a>
+  <a class="nav-item" onclick="showSection('sweepings',this)"><span class="nav-icon">◬</span> Sweepings</a>
+  <a class="nav-item" onclick="showSection('liner',this)"><span class="nav-icon">◫</span> Liner Usage</a>
+
+  <div class="sidebar-footer">
+    CWH Johnsons International<br>in association with Beacon Surveys<br>
+    Prepared for Filhet-Allard Maritime<br>
+    Confidential · 7 May 2026
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">Cocoa Bean Imports — Port of Antwerp</div>
+    <div class="topbar-meta">
+      <span>Columns A–Y + AH only</span>
+      <span class="badge gold">541 files</span>
+      <span class="badge">1,307,107 bags</span>
+      <span>7 May 2026</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div id="overview" class="section active">
+      <div class="section-heading">Executive Summary</div>
+      <div class="section-desc">All statistics sourced from columns A–Y and AH of the status spreadsheet</div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div><div class="kpi-label">Total Files</div><div class="kpi-value">541</div><div class="kpi-sub">Season 2025–2026</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Total Bags</div><div class="kpi-value">1,307,107</div><div class="kpi-sub">All files combined</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Landed Sound</div><div class="kpi-value">77.0%</div><div class="kpi-sub">1,006,476 bags</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Avg Damage Rate</div><div class="kpi-value">20.1%</div><div class="kpi-sub">263,204 bags damaged</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Infestation Rate</div><div class="kpi-value">36.8%</div><div class="kpi-sub">199 of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-label">Liner Bag Present</div><div class="kpi-value">63.2%</div><div class="kpi-sub">342 of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--amber)"></div><div class="kpi-label">Sweepings</div><div class="kpi-value">99,385</div><div class="kpi-sub">kgs net weight · 81 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div><div class="kpi-label">8 Shipping Lines</div><div class="kpi-value">7</div><div class="kpi-sub">Warehouse facilities</div></div>
+      </div>
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">File Status</div><div class="card-title">Distribution by Workflow Stage</div><div class="card-sub">Column AH · all 541 files</div>
+          <div class="chart-wrap" style="height:230px"><canvas id="overviewStatus" role="img" aria-label="Status donut"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Cargo Condition</div><div class="card-title">Bags by Landing Condition</div><div class="card-sub">Columns Q & S · 1,307,107 bags total</div>
+          <div class="chart-wrap" style="height:230px"><canvas id="overviewCargo" role="img" aria-label="Cargo donut"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARGO -->
+    <div id="cargo" class="section">
+      <div class="section-heading">Cargo Condition</div>
+      <div class="section-desc">Columns Q (Total Bags) · R (Landed Sound) · S (Landed Damaged)</div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Landed Sound</div><div class="kpi-value">1,006,476</div><div class="kpi-sub">77.0% of total bags</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Landed Damaged</div><div class="kpi-value">263,204</div><div class="kpi-sub">20.1% of total bags</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Total Bags</div><div class="kpi-value">1,307,107</div><div class="kpi-sub">Across all 541 files</div></div>
+      </div>
+      <div class="chart-row cols-1-2">
+        <div class="card">
+          <div class="card-label">Overall Split</div><div class="card-title">Sound vs Damaged</div><div class="card-sub">All 541 files combined</div>
+          <div class="chart-wrap" style="height:240px"><canvas id="cargoDoughnut" role="img" aria-label="Cargo donut"></canvas></div>
+          <div class="legend" style="margin-top:10px">
+            <div class="legend-item"><div class="legend-dot" style="background:#1A6B45"></div>Landed sound 77.0%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#B5303A"></div>Landed damaged 20.1%</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">By Origin Country</div><div class="card-title">Sound vs Damaged Bags per Origin</div><div class="card-sub">Stacked — absolute bag counts</div>
+          <div class="chart-wrap" style="height:280px"><canvas id="cargoByOrigin" role="img" aria-label="Sound vs damaged stacked"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORIGINS -->
+    <div id="origins" class="section">
+      <div class="section-heading">Origins & Damage Analysis</div>
+      <div class="section-desc">Column M (Origin) · Columns Q & S for damage rates</div>
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Origin Distribution</div><div class="card-title">Files by Country of Origin</div><div class="card-sub">541 total files</div>
+          <div class="chart-wrap" style="height:240px"><canvas id="originDoughnut" role="img" aria-label="Origin donut"></canvas></div>
+          <div class="legend" style="margin-top:10px">
+            <div class="legend-item"><div class="legend-dot" style="background:#1A2B4A"></div>Ivory Coast 253</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1E5A9C"></div>Ghana 163</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3A7EC8"></div>Nigeria 58</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7AAAD4"></div>Ecuador 43</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#AACBE8"></div>Liberia 9</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#D4E8F4"></div>Others 15</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Damage Rate Ranking</div><div class="card-title">% Bags Landed Damaged by Origin</div><div class="card-sub">Seasonal average 20.1%</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="damageByOrigin" role="img" aria-label="Damage rate by origin"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Detail Table</div><div class="card-title">Damage Statistics by Origin Country</div>
+        <div class="card-sub" style="margin-bottom:12px">Ranked by total bags · green = below average · red = above average</div>
+        <table class="data-table">
+          <thead><tr><th>Origin</th><th>Files</th><th class="num">Total Bags</th><th class="num">Damaged Bags</th><th class="num">Damage Rate</th></tr></thead>
+          <tbody>
+            <tr><td>Ivory Coast</td><td>253</td><td class="num">714,473</td><td class="num">151,200</td><td class="num mid">21.2%</td></tr>
+            <tr><td>Ghana</td><td>163</td><td class="num">341,665</td><td class="num">47,522</td><td class="num low">13.9% ↓</td></tr>
+            <tr><td>Nigeria</td><td>58</td><td class="num">111,599</td><td class="num">24,308</td><td class="num mid">21.8%</td></tr>
+            <tr><td>Ecuador</td><td>43</td><td class="num">84,437</td><td class="num">24,140</td><td class="num high">28.6% ↑</td></tr>
+            <tr><td>Liberia</td><td>9</td><td class="num">21,554</td><td class="num">6,183</td><td class="num high">28.7% ↑</td></tr>
+            <tr><td>Cameroun</td><td>5</td><td class="num">9,920</td><td class="num">1,458</td><td class="num low">14.7% ↓</td></tr>
+            <tr><td>Togo</td><td>4</td><td class="num">11,160</td><td class="num">1,901</td><td class="num">17.0%</td></tr>
+            <tr><td>Others</td><td>9</td><td class="num">12,299</td><td class="num">—</td><td class="num">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div id="status" class="section">
+      <div class="section-heading">File Status Overview</div>
+      <div class="section-desc">Column AH (STATUS) · all 541 files</div>
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Status Split</div><div class="card-title">Distribution by Stage</div><div class="card-sub">541 files · column AH</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="statusDoughnut" role="img" aria-label="Status donut"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Stage Breakdown</div><div class="card-title">File Count & Share by Status</div><div class="card-sub">All workflow stages</div>
+          <div style="margin-top:6px">
+            <div class="prog-row"><span class="prog-label">Cost NOK</span><div class="prog-track"><div class="prog-fill" style="width:23.7%;background:#B5303A"></div></div><span class="prog-val">128 (23.7%)</span></div>
+            <div class="prog-row"><span class="prog-label">Recon (F)</span><div class="prog-track"><div class="prog-fill" style="width:20.0%;background:#C87800"></div></div><span class="prog-val">108 (20.0%)</span></div>
+            <div class="prog-row"><span class="prog-label">Plan</span><div class="prog-track"><div class="prog-fill" style="width:18.7%;background:#3A7EC8"></div></div><span class="prog-val">101 (18.7%)</span></div>
+            <div class="prog-row"><span class="prog-label">Sort (F)</span><div class="prog-track"><div class="prog-fill" style="width:16.3%;background:#7AAAD4"></div></div><span class="prog-val">88 (16.3%)</span></div>
+            <div class="prog-row"><span class="prog-label">BIS (F)</span><div class="prog-track"><div class="prog-fill" style="width:7.9%;background:#1A6B45"></div></div><span class="prog-val">43 (7.9%)</span></div>
+            <div class="prog-row"><span class="prog-label">Cost OK</span><div class="prog-track"><div class="prog-fill" style="width:5.9%;background:#22A05A"></div></div><span class="prog-val">32 (5.9%)</span></div>
+            <div class="prog-row"><span class="prog-label">Report</span><div class="prog-track"><div class="prog-fill" style="width:2.6%;background:#E8A090"></div></div><span class="prog-val">14 (2.6%)</span></div>
+            <div class="prog-row"><span class="prog-label">Survey</span><div class="prog-track"><div class="prog-fill" style="width:2.0%;background:#90B8D8"></div></div><span class="prog-val">11 (2.0%)</span></div>
+            <div class="prog-row"><span class="prog-label">Cost POK</span><div class="prog-track"><div class="prog-fill" style="width:1.7%;background:#C8A050"></div></div><span class="prog-val">9 (1.7%)</span></div>
+            <div class="prog-row"><span class="prog-label">Sort (T)</span><div class="prog-track"><div class="prog-fill" style="width:0.9%;background:#80C890"></div></div><span class="prog-val">5 (0.9%)</span></div>
+            <div class="prog-row"><span class="prog-label">Recon (T)</span><div class="prog-track"><div class="prog-fill" style="width:0.4%;background:#A0A0B8"></div></div><span class="prog-val">2 (0.4%)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGISTICS -->
+    <div id="logistics" class="section">
+      <div class="section-heading">Shipping Lines & Warehouse Keepers</div>
+      <div class="section-desc">Column E (Shipping Line) · Column I (Warehouse)</div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div><div class="kpi-label">Dominant Carrier</div><div class="kpi-value">MSC</div><div class="kpi-sub">231 files · 42.7%</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-label">Largest Warehouse</div><div class="kpi-value">Katoen Natie</div><div class="kpi-sub">163 files · 30.1%</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Active Facilities</div><div class="kpi-value">7</div><div class="kpi-sub">Warehouses · 8 shipping lines</div></div>
+      </div>
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Shipping Lines</div><div class="card-title">Files per Carrier</div><div class="card-sub">Column E · 541 total files</div>
+          <div class="chart-wrap" style="height:270px"><canvas id="shippingBar" role="img" aria-label="Shipping lines bar"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Warehouse Keepers</div><div class="card-title">Files per Facility</div><div class="card-sub">Column I · Antwerp port area</div>
+          <div class="chart-wrap" style="height:270px"><canvas id="warehouseBar" role="img" aria-label="Warehouse bar"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSURED -->
+    <div id="insured" class="section">
+      <div class="section-heading">Insured Parties</div>
+      <div class="section-desc">Column G · Cocoasource S.A. = Edelsource S.A. — same entity, name changed mid-season (combined: 50 files)</div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div><div class="kpi-label">Top 2 Parties</div><div class="kpi-value">66.2%</div><div class="kpi-sub">Touton + Agri Commodities</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Top 5 Parties</div><div class="kpi-value">93%+</div><div class="kpi-sub">Share of all files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-label">Cocoasource / Edelsource</div><div class="kpi-value">50 files</div><div class="kpi-sub">Same entity · combined</div></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Portfolio Distribution</div><div class="card-title">Files by Insured Party</div>
+        <div class="card-sub" style="margin-bottom:14px">Ranked by volume</div>
+        <div class="chart-wrap" style="height:290px"><canvas id="insuredBar" role="img" aria-label="Insured parties bar"></canvas></div>
+      </div>
+    </div>
+
+
+    <!-- RECOMMENDATIONS -->
+    <div id="recommendations" class="section">
+      <div class="section-heading">Survey Recommendations</div>
+      <div class="section-desc">Column Y (RECOMMENDATIONS) &middot; joint survey outcomes &middot; within columns A&ndash;Y</div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div>
+          <div class="kpi-label">With Recommendation</div><div class="kpi-value">429</div>
+          <div class="kpi-sub">79.3% of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--muted)"></div>
+          <div class="kpi-label">Not Yet Surveyed</div><div class="kpi-value">112</div>
+          <div class="kpi-sub">20.7% &mdash; no data yet</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div>
+          <div class="kpi-label">Most Common</div><div class="kpi-value">Sort + Recon</div>
+          <div class="kpi-sub">272 files &middot; 63.4% of surveyed</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--teal)"></div>
+          <div class="kpi-label">Back in Stack</div><div class="kpi-value">114 files</div>
+          <div class="kpi-sub">26.6% of surveyed files</div></div>
+      </div>
+
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Surveyed Files Only</div>
+          <div class="card-title">Recommendation Split &mdash; 429 Files</div>
+          <div class="card-sub">Files with completed joint survey</div>
+          <div class="chart-wrap" style="height:250px">
+            <canvas id="recDoughnut" role="img" aria-label="Recommendations donut surveyed files"></canvas>
+          </div>
+          <div class="legend" style="margin-top:10px">
+            <div class="legend-item"><div class="legend-dot" style="background:#1A2B4A"></div>Sort + Reconditioning &mdash; 272 (63.4%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#0B6B6B"></div>Back in stack &mdash; 114 (26.6%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#B8860B"></div>Fumigation &mdash; 31 (7.2%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1E5A9C"></div>Reconditioning &mdash; 10 (2.3%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8A9AB0"></div>Other &mdash; 2 (0.5%)</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">All 541 Files</div>
+          <div class="card-title">Including Files Not Yet Surveyed</div>
+          <div class="card-sub">112 files (20.7%) still awaiting joint survey</div>
+          <div class="chart-wrap" style="height:250px">
+            <canvas id="recAllDoughnut" role="img" aria-label="Recommendations donut all files"></canvas>
+          </div>
+          <div class="legend" style="margin-top:10px">
+            <div class="legend-item"><div class="legend-dot" style="background:#1A2B4A"></div>Sort + Reconditioning &mdash; 272 (50.3%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#0B6B6B"></div>Back in stack &mdash; 114 (21.1%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#B8860B"></div>Fumigation &mdash; 31 (5.7%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1E5A9C"></div>Reconditioning &mdash; 10 (1.8%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8A9AB0"></div>Other &mdash; 2 (0.4%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#D8DDE8"></div>Not yet surveyed &mdash; 112 (20.7%)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Detail Table</div>
+        <div class="card-title">Full Recommendation Breakdown</div>
+        <div class="card-sub" style="margin-bottom:12px">Column Y &middot; counts and percentages vs surveyed files and vs all 541 files</div>
+        <table class="data-table">
+          <thead><tr>
+            <th>Recommendation</th>
+            <th class="num">Files</th>
+            <th class="num">% of surveyed (429)</th>
+            <th class="num">% of all files (541)</th>
+            <th>Visual (of surveyed)</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><strong>Sorting + Reconditioning</strong></td><td class="num">272</td><td class="num high">63.4%</td><td class="num">50.3%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:63.4%;background:#1A2B4A"></div></div></td></tr>
+            <tr><td>Back in stack</td><td class="num">114</td><td class="num">26.6%</td><td class="num">21.1%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:26.6%;background:#0B6B6B"></div></div></td></tr>
+            <tr><td>Fumigation</td><td class="num">31</td><td class="num">7.2%</td><td class="num">5.7%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:7.2%;background:#B8860B"></div></div></td></tr>
+            <tr><td>Reconditioning</td><td class="num">10</td><td class="num">2.3%</td><td class="num">1.8%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:2.3%;background:#1E5A9C"></div></div></td></tr>
+            <tr><td>Salvage sale</td><td class="num">1</td><td class="num">0.2%</td><td class="num">0.2%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:0.5%;background:#B5303A"></div></div></td></tr>
+            <tr><td>BCS to advise</td><td class="num">1</td><td class="num">0.2%</td><td class="num">0.2%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:0.5%;background:#8A9AB0"></div></div></td></tr>
+            <tr style="background:var(--stone)">
+              <td style="color:var(--muted);font-style:italic">Not yet surveyed</td>
+              <td class="num" style="color:var(--muted)">112</td>
+              <td class="num" style="color:var(--muted)">&mdash;</td>
+              <td class="num" style="color:var(--muted)">20.7%</td>
+              <td><div class="mini-bar-track" style="width:120px"><div class="mini-bar-fill" style="width:20.7%;background:#D8DDE8"></div></div></td></tr>
+            <tr style="background:var(--navy)">
+              <td style="color:white;font-weight:600">Total</td>
+              <td class="num" style="color:white;font-weight:600">541</td>
+              <td class="num" style="color:white">100%</td>
+              <td class="num" style="color:white">100%</td>
+              <td></td></tr>
+          </tbody>
+        </table>
+        <div class="insight" style="margin-top:12px">
+          <strong>Sorting + Reconditioning</strong> is recommended in 63.4% of surveyed files, reflecting the scale of damaged cargo requiring active treatment.
+          <strong>Fumigation</strong> (7.2% of surveyed) is directly linked to the 36.8% infestation rate. 112 files (20.7%) are still awaiting joint survey completion.
+        </div>
+      </div>
+    </div>
+
+    <!-- INFESTATION -->
+    <div id="infestation" class="section">
+      <div class="section-heading">Infestation Analysis</div>
+      <div class="section-desc">Column X (INFESTATION) · YES/NO per file · broken down by origin and warehouse</div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Infested Files</div><div class="kpi-value">199</div><div class="kpi-sub">36.8% of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">No Infestation</div><div class="kpi-value">342</div><div class="kpi-sub">63.2% of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--amber)"></div><div class="kpi-label">Highest by Origin</div><div class="kpi-value">Uganda</div><div class="kpi-sub">100% — 2/2 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--red)"></div><div class="kpi-label">Highest by Warehouse</div><div class="kpi-value">Durme-Natie</div><div class="kpi-sub">75.0% — 39/52 files</div></div>
+      </div>
+
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">By Origin Country</div>
+          <div class="card-title">Infestation Rate per Origin</div>
+          <div class="card-sub">% of files with infestation reported · column X</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="infestByOriginBar" role="img" aria-label="Infestation by origin"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-label">By Warehouse</div>
+          <div class="card-title">Infestation Rate per Warehouse</div>
+          <div class="card-sub">% of files with infestation reported · column X</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="infestByWhBar" role="img" aria-label="Infestation by warehouse"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Detail — By Origin</div>
+          <div class="card-title">YES / NO count and rate per origin</div>
+          <div class="card-sub" style="margin-bottom:12px">Ordered by number of files</div>
+          <table class="data-table">
+            <thead><tr><th>Origin</th><th class="num">Total Files</th><th class="num">YES</th><th class="num">NO</th><th class="num">Rate</th><th>Visual</th></tr></thead>
+            <tbody>
+              <tr><td>Ivory Coast</td><td class="num">253</td><td class="num">91</td><td class="num">162</td><td class="num mid">36.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:36%;background:#C87800"></div></div></td></tr>
+              <tr><td>Ghana</td><td class="num">163</td><td class="num">73</td><td class="num">90</td><td class="num high">44.8%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:44.8%;background:#B5303A"></div></div></td></tr>
+              <tr><td>Nigeria</td><td class="num">58</td><td class="num">19</td><td class="num">39</td><td class="num mid">32.8%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:32.8%;background:#C87800"></div></div></td></tr>
+              <tr><td>Ecuador</td><td class="num">43</td><td class="num">6</td><td class="num">37</td><td class="num low">14.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:14%;background:#1A6B45"></div></div></td></tr>
+              <tr><td>Liberia</td><td class="num">9</td><td class="num">1</td><td class="num">8</td><td class="num low">11.1%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:11.1%;background:#1A6B45"></div></div></td></tr>
+              <tr><td>Cameroun</td><td class="num">5</td><td class="num">2</td><td class="num">3</td><td class="num mid">40.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:40%;background:#C87800"></div></div></td></tr>
+              <tr><td>Togo</td><td class="num">4</td><td class="num">3</td><td class="num">1</td><td class="num high">75.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:75%;background:#B5303A"></div></div></td></tr>
+              <tr><td>Others</td><td class="num">4</td><td class="num">4</td><td class="num">0</td><td class="num high">100%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%;background:#B5303A"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-label">Detail — By Warehouse</div>
+          <div class="card-title">YES / NO count and rate per warehouse</div>
+          <div class="card-sub" style="margin-bottom:12px">Ordered by number of files</div>
+          <table class="data-table">
+            <thead><tr><th>Warehouse</th><th class="num">Total</th><th class="num">YES</th><th class="num">NO</th><th class="num">Rate</th><th>Visual</th></tr></thead>
+            <tbody>
+              <tr><td>Katoen Natie</td><td class="num">163</td><td class="num">82</td><td class="num">81</td><td class="num high">50.3%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:50.3%;background:#B5303A"></div></div></td></tr>
+              <tr><td>CWT Antwerp</td><td class="num">125</td><td class="num">1</td><td class="num">124</td><td class="num low">0.8%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0.8%;background:#1A6B45"></div></div></td></tr>
+              <tr><td>Molenbergnatie</td><td class="num">70</td><td class="num">3</td><td class="num">67</td><td class="num low">4.3%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:4.3%;background:#1A6B45"></div></div></td></tr>
+              <tr><td>C. Steinweg</td><td class="num">64</td><td class="num">47</td><td class="num">17</td><td class="num high">73.4%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:73.4%;background:#B5303A"></div></div></td></tr>
+              <tr><td>Vollers</td><td class="num">63</td><td class="num">26</td><td class="num">37</td><td class="num mid">41.3%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:41.3%;background:#C87800"></div></div></td></tr>
+              <tr><td>Durme-Natie</td><td class="num">52</td><td class="num">39</td><td class="num">13</td><td class="num high">75.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:75%;background:#B5303A"></div></div></td></tr>
+              <tr><td>CCB N.V.</td><td class="num">2</td><td class="num">0</td><td class="num">2</td><td class="num low">0.0%</td><td><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;background:#1A6B45"></div></div></td></tr>
+            </tbody>
+          </table>
+          <div class="insight amber" style="margin-top:12px">
+            <strong>Key finding:</strong> C. Steinweg (73.4%) and Durme-Natie (75.0%) have significantly higher infestation rates than the seasonal average of 36.8%. CWT Antwerp (0.8%) and Molenbergnatie (4.3%) have near-zero infestation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWEEPINGS -->
+    <div id="sweepings" class="section">
+      <div class="section-heading">Sweepings Analysis</div>
+      <div class="section-desc">Column W (SWEEPINGS KGS NW) · 81 files with data · broken down by origin and warehouse</div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Total Sweepings</div><div class="kpi-value">99,385</div><div class="kpi-sub">kgs net weight · column W</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-label">Files with Data</div><div class="kpi-value">81</div><div class="kpi-sub">14.9% of 541 files</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--navy)"></div><div class="kpi-label">Avg per File</div><div class="kpi-value">1,227 kgs</div><div class="kpi-sub">Where sweepings recorded</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--amber)"></div><div class="kpi-label">Largest Warehouse</div><div class="kpi-value">Katoen Natie</div><div class="kpi-sub">65,533 kgs · 65 files</div></div>
+      </div>
+
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">By Origin Country</div>
+          <div class="card-title">Total Sweepings kgs NW per Origin</div>
+          <div class="card-sub">Only origins with recorded sweepings</div>
+          <div class="chart-wrap" style="height:250px"><canvas id="sweepOriginBar" role="img" aria-label="Sweepings by origin"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-label">By Warehouse</div>
+          <div class="card-title">Total Sweepings kgs NW per Warehouse</div>
+          <div class="card-sub">Only warehouses with recorded sweepings</div>
+          <div class="chart-wrap" style="height:250px"><canvas id="sweepWhBar" role="img" aria-label="Sweepings by warehouse"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Detail — By Origin</div>
+          <div class="card-title">Sweepings kgs, files and average per origin</div>
+          <div class="card-sub" style="margin-bottom:12px">Ranked by total kgs</div>
+          <table class="data-table">
+            <thead><tr><th>Origin</th><th class="num">Total Files</th><th class="num">With Sweepings</th><th class="num">Total kgs NW</th><th class="num">Avg kgs / file</th></tr></thead>
+            <tbody>
+              <tr><td>Ghana</td><td class="num">163</td><td class="num">24</td><td class="num">37,704</td><td class="num">1,571</td></tr>
+              <tr><td>Ivory Coast</td><td class="num">253</td><td class="num">46</td><td class="num">31,911</td><td class="num">694</td></tr>
+              <tr><td>Uganda</td><td class="num">2</td><td class="num">2</td><td class="num">16,989</td><td class="num high">8,494</td></tr>
+              <tr><td>Congo</td><td class="num">1</td><td class="num">1</td><td class="num">7,466</td><td class="num high">7,466</td></tr>
+              <tr><td>Nigeria</td><td class="num">58</td><td class="num">7</td><td class="num">4,801</td><td class="num">686</td></tr>
+              <tr><td>Ecuador</td><td class="num">43</td><td class="num">1</td><td class="num">515</td><td class="num">515</td></tr>
+              <tr><td>Liberia / Togo / etc.</td><td class="num">21</td><td class="num">0</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+          <div class="insight" style="margin-top:10px">
+            <strong>Note:</strong> Uganda and Congo show very high averages (8,494 and 7,466 kgs) but represent only 2 and 1 files respectively. Ghana has the highest volume with 37,704 kgs across 24 files.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Detail — By Warehouse</div>
+          <div class="card-title">Sweepings kgs, files and average per warehouse</div>
+          <div class="card-sub" style="margin-bottom:12px">Ranked by total kgs</div>
+          <table class="data-table">
+            <thead><tr><th>Warehouse</th><th class="num">Total Files</th><th class="num">With Sweepings</th><th class="num">Total kgs NW</th><th class="num">Avg kgs / file</th></tr></thead>
+            <tbody>
+              <tr><td>Katoen Natie</td><td class="num">163</td><td class="num">65</td><td class="num">65,533</td><td class="num">1,008</td></tr>
+              <tr><td>C. Steinweg</td><td class="num">64</td><td class="num">4</td><td class="num">24,970</td><td class="num high">6,242</td></tr>
+              <tr><td>Vollers</td><td class="num">63</td><td class="num">6</td><td class="num">6,414</td><td class="num">1,069</td></tr>
+              <tr><td>Molenbergnatie</td><td class="num">70</td><td class="num">3</td><td class="num">1,408</td><td class="num">469</td></tr>
+              <tr><td>CWT Antwerp</td><td class="num">125</td><td class="num">2</td><td class="num">717</td><td class="num">359</td></tr>
+              <tr><td>CCB N.V.</td><td class="num">2</td><td class="num">1</td><td class="num">343</td><td class="num">343</td></tr>
+              <tr><td>Durme-Natie</td><td class="num">52</td><td class="num">0</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+          <div class="insight amber" style="margin-top:10px">
+            <strong>Key finding:</strong> C. Steinweg has only 4 files with sweepings but an exceptional average of 6,242 kgs per file. Durme-Natie records no sweepings at all across 52 files.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINER -->
+    <div id="liner" class="section">
+      <div class="section-heading">Liner Bag Usage</div>
+      <div class="section-desc">Column N (LINER USED) · YES / NO / UNKNOWN per file</div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--blue)"></div><div class="kpi-label">Liner Present</div><div class="kpi-value">342</div><div class="kpi-sub">63.2% YES</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--muted)"></div><div class="kpi-label">No Liner</div><div class="kpi-value">166</div><div class="kpi-sub">30.7% NO</div></div>
+        <div class="kpi-card"><div class="kpi-accent" style="background:var(--light)"></div><div class="kpi-label">Unknown</div><div class="kpi-value">30</div><div class="kpi-sub">5.5% not confirmed</div></div>
+      </div>
+      <div class="chart-row cols-2">
+        <div class="card">
+          <div class="card-label">Overall Split</div><div class="card-title">Liner Bag Present</div><div class="card-sub">Column N · 541 files</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="linerDoughnut" role="img" aria-label="Liner donut"></canvas></div>
+          <div class="legend" style="margin-top:10px">
+            <div class="legend-item"><div class="legend-dot" style="background:#1E5A9C"></div>YES — 342 (63.2%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8A9AB0"></div>NO — 166 (30.7%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#D4E8F4"></div>Unknown — 30 (5.5%)</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Context</div><div class="card-title">What liner data tells us</div>
+          <div class="card-sub" style="margin-bottom:12px">Liner bags protect cargo from moisture and contamination</div>
+          <div class="prog-row"><span class="prog-label" style="width:100px">YES — liner</span><div class="prog-track"><div class="prog-fill" style="width:63.2%;background:#1E5A9C"></div></div><span class="prog-val">342</span></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px">NO — no liner</span><div class="prog-track"><div class="prog-fill" style="width:30.7%;background:#8A9AB0"></div></div><span class="prog-val">166</span></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px">Unknown</span><div class="prog-track"><div class="prog-fill" style="width:5.5%;background:#D4E8F4"></div></div><span class="prog-val">30</span></div>
+          <div class="insight" style="margin-top:16px">
+            <strong>63.2%</strong> of shipments confirmed a liner bag was present. In <strong>5.5%</strong> of cases the warehouse keeper could not confirm whether a liner was used — these are recorded as UNKNOWN.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+const C = {
+  navy:'#1A2B4A', blue:'#1E5A9C', blue2:'#3A7EC8', blue3:'#7AAAD4',
+  blue4:'#AACBE8', blue5:'#D4E8F4', teal:'#0B6B6B',
+  green:'#1A6B45', red:'#B5303A', amber:'#C87800', muted:'#8A9AB0'
+};
+
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#5A6A7E';
+
+const donut = (id, labels, data, colors) => new Chart(document.getElementById(id), {
+  type:'doughnut',
+  data:{ labels, datasets:[{ data, backgroundColor:colors, borderWidth:3, borderColor:'#F5F7FA', hoverOffset:6 }] },
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.parsed.toLocaleString()}` } } }
+  }
+});
+
+const hbar = (id, labels, data, colors, max) => new Chart(document.getElementById(id), {
+  type:'bar',
+  data:{ labels, datasets:[{ data, backgroundColor:colors, borderWidth:0, borderRadius:3 }] },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x.toLocaleString()}` } } },
+    scales:{
+      x:{ max, grid:{color:'#EDF0F5'}, border:{display:false}, ticks:{color:'#8A9AB0',font:{size:10}} },
+      y:{ grid:{display:false}, border:{display:false}, ticks:{color:'#4A5568',font:{size:11}} }
+    }
+  }
+});
+
+// Overview
+donut('overviewStatus',['Cost NOK','Recon (F)','Plan','Sort (F)','BIS (F)','Cost OK','Others'],
+  [128,108,101,88,43,32,41],['#B5303A','#C87800','#3A7EC8','#7AAAD4','#1A6B45','#22A05A','#9AAABB']);
+donut('overviewCargo',['Landed Sound','Landed Damaged'],[1006476,263204],['#1A6B45','#B5303A']);
+
+// Cargo
+donut('cargoDoughnut',['Landed Sound','Landed Damaged'],[1006476,263204],['#1A6B45','#B5303A']);
+new Chart(document.getElementById('cargoByOrigin'),{
+  type:'bar',
+  data:{ labels:['Ivory Coast','Ghana','Nigeria','Ecuador','Liberia','Others'],
+    datasets:[
+      {label:'Landed Sound', data:[563273,294143,87291,60297,15371,5100], backgroundColor:'#1A6B45', borderWidth:0},
+      {label:'Landed Damaged',data:[151200,47522,24308,24140,6183,6492],  backgroundColor:'#B5303A', borderWidth:0}
+    ]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true,position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.x.toLocaleString()}`}} },
+    scales:{ x:{stacked:true,grid:{color:'#EDF0F5'},border:{display:false},ticks:{color:'#8A9AB0',font:{size:10}}},
+             y:{stacked:true,grid:{display:false},border:{display:false},ticks:{color:'#4A5568',font:{size:11}}} }
+  }
+});
+
+// Origins
+donut('originDoughnut',['Ivory Coast','Ghana','Nigeria','Ecuador','Liberia','Others'],
+  [253,163,58,43,9,15],['#1A2B4A','#1E5A9C','#3A7EC8','#7AAAD4','#AACBE8','#D4E8F4']);
+new Chart(document.getElementById('damageByOrigin'),{
+  type:'bar',
+  data:{ labels:['Ghana','Cameroun','Togo','Ivory Coast','Nigeria','Ecuador','Liberia'],
+    datasets:[{data:[13.9,14.7,17.0,21.2,21.8,28.6,28.7],
+      backgroundColor:['#1A6B45','#1A6B45','#3A7EC8','#C87800','#C87800','#B5303A','#B5303A'],
+      borderWidth:0,borderRadius:4}]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}%`}} },
+    scales:{ x:{max:35,grid:{color:'#EDF0F5'},border:{display:false},ticks:{color:'#8A9AB0',font:{size:10},callback:v=>v+'%'}},
+             y:{grid:{display:false},border:{display:false},ticks:{color:'#4A5568',font:{size:11}}} }
+  }
+});
+
+// Status
+donut('statusDoughnut',['Cost NOK','Recon (F)','Plan','Sort (F)','BIS (F)','Cost OK','Others'],
+  [128,108,101,88,43,32,41],['#B5303A','#C87800','#3A7EC8','#7AAAD4','#1A6B45','#22A05A','#9AAABB']);
+
+// Logistics
+hbar('shippingBar',['ONE','OOCL','Cosco','CMA CGM','Maersk','Grimaldi','Hapag-Lloyd','MSC'],
+  [3,9,12,23,63,86,114,231],['#D4E8F4','#AACBE8','#AACBE8','#7AAAD4','#3A7EC8','#3A7EC8','#1E5A9C','#1A2B4A'],265);
+hbar('warehouseBar',['CCB N.V.','Durme-Natie','Vollers','C. Steinweg','Molenbergnatie','CWT Antwerp','Katoen Natie'],
+  [2,52,63,64,70,125,163],['#AACBE8','#7AAAD4','#7AAAD4','#3A7EC8','#3A7EC8','#1E5A9C','#1A2B4A'],195);
+
+// Insured
+hbar('insuredBar',['Others','Sunbeth','ECOM','Sucres & Denrées','Ascot Amsterdam','Cocoasource / Edelsource *','Barry Callebaut','Agri Commodities','Touton'],
+  [8,8,5,14,28,50,70,151,207],['#D4E8F4','#D4E8F4','#D4E8F4','#AACBE8','#7AAAD4','#3A7EC8','#3A7EC8','#1E5A9C','#1A2B4A'],235);
+
+// Infestation by origin
+new Chart(document.getElementById('infestByOriginBar'),{
+  type:'bar',
+  data:{ labels:['Uganda','Togo','Guinea','Ghana','Cameroun','Ivory Coast','Nigeria','Ecuador','Liberia'],
+    datasets:[
+      {label:'Infested (YES)', data:[100,75,50,44.8,40,36,32.8,14,11.1],
+       backgroundColor:'#B5303A',borderWidth:0,borderRadius:3},
+      {label:'No infestation (NO)', data:[0,25,50,55.2,60,64,67.2,86,88.9],
+       backgroundColor:'#EDF0F5',borderWidth:0,borderRadius:3}
+    ]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true,position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.x.toFixed(1)}%`}} },
+    scales:{ x:{stacked:true,max:100,grid:{color:'#EDF0F5'},border:{display:false},ticks:{color:'#8A9AB0',font:{size:10},callback:v=>v+'%'}},
+             y:{stacked:true,grid:{display:false},border:{display:false},ticks:{color:'#4A5568',font:{size:11}}} }
+  }
+});
+
+// Infestation by warehouse
+new Chart(document.getElementById('infestByWhBar'),{
+  type:'bar',
+  data:{ labels:['CCB N.V.','CWT Antwerp','Molenbergnatie','Vollers','Katoen Natie','C. Steinweg','Durme-Natie'],
+    datasets:[
+      {label:'Infested (YES)', data:[0,0.8,4.3,41.3,50.3,73.4,75.0],
+       backgroundColor:'#B5303A',borderWidth:0,borderRadius:3},
+      {label:'No infestation (NO)', data:[100,99.2,95.7,58.7,49.7,26.6,25.0],
+       backgroundColor:'#EDF0F5',borderWidth:0,borderRadius:3}
+    ]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:true,position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.x.toFixed(1)}%`}} },
+    scales:{ x:{stacked:true,max:100,grid:{color:'#EDF0F5'},border:{display:false},ticks:{color:'#8A9AB0',font:{size:10},callback:v=>v+'%'}},
+             y:{stacked:true,grid:{display:false},border:{display:false},ticks:{color:'#4A5568',font:{size:11}}} }
+  }
+});
+
+// Sweepings by origin
+hbar('sweepOriginBar',['Ecuador','Nigeria','Ivory Coast','Ghana','Congo','Uganda'],
+  [515,4801,31911,37704,7466,16989],
+  ['#D4E8F4','#AACBE8','#3A7EC8','#1E5A9C','#0B6B6B','#1A2B4A'],45000);
+
+// Sweepings by warehouse
+hbar('sweepWhBar',['CCB N.V.','CWT Antwerp','Molenbergnatie','Vollers','C. Steinweg','Katoen Natie'],
+  [343,717,1408,6414,24970,65533],
+  ['#D4E8F4','#AACBE8','#7AAAD4','#3A7EC8','#1E5A9C','#1A2B4A'],75000);
+
+// Liner
+donut('linerDoughnut',['YES','NO','Unknown'],[342,166,30],['#1E5A9C','#8A9AB0','#D4E8F4']);
+
+// Recommendations
+donut('recDoughnut',
+  ['Sort + Reconditioning','Back in stack','Fumigation','Reconditioning','Other'],
+  [272,114,31,10,2],
+  ['#1A2B4A','#0B6B6B','#B8860B','#1E5A9C','#8A9AB0']);
+
+donut('recAllDoughnut',
+  ['Sort + Reconditioning','Back in stack','Fumigation','Reconditioning','Other','Not yet surveyed'],
+  [272,114,31,10,2,112],
+  ['#1A2B4A','#0B6B6B','#B8860B','#1E5A9C','#8A9AB0','#EDF0F5']);
+</script>
+</body>
+</html>
