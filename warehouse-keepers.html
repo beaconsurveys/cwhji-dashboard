@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warehouse Keeper Turnaround Times — Season 2024/2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f2846;--navy2:#16385f;--gold:#c9a24b;--ink:#1e2a38;--mute:#5f6b78;--line:#e6e2d8;--cream:#f6f4ee;--card:#ffffff;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+/* layout */
+.wrap{display:flex;min-height:100vh}
+.side{width:248px;flex:0 0 248px;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;padding:30px 24px;display:flex;flex-direction:column}
+.brand{border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:22px;margin-bottom:22px}
+.brand-name{font-family:'DM Serif Display',serif;font-size:22px;color:#fff;letter-spacing:.2px;line-height:1.15}
+.brand-sub{font-size:11.5px;letter-spacing:2px;color:var(--gold);margin-top:8px;font-weight:600}
+.nav{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.nav a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:rgba(255,255,255,.72);font-size:13.5px;padding:9px 10px;border-radius:7px;transition:.15s}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav a .n{font-size:11px;color:var(--gold);font-weight:600;width:18px;flex:0 0 18px}
+.side-foot{margin-top:auto;font-size:11px;color:rgba(255,255,255,.5);line-height:1.6;padding-top:20px;border-top:1px solid rgba(255,255,255,.12)}
+/* main */
+.main{flex:1;padding:46px 56px 80px;max-width:1080px}
+.eyebrow{font-size:12px;letter-spacing:2.5px;color:var(--gold);font-weight:700;text-transform:uppercase}
+h1{font-family:'DM Serif Display',serif;font-size:38px;line-height:1.1;margin:10px 0 8px;color:var(--navy)}
+.lede{color:var(--mute);font-size:15px;max-width:680px}
+.flow{width:64px;height:3px;background:var(--gold);margin:22px 0 40px}
+section{margin-bottom:52px;scroll-margin-top:24px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.sec-head .idx{font-family:'DM Serif Display',serif;color:var(--gold);font-size:22px}
+.sec-head h2{font-size:20px;color:var(--navy);font-weight:600;letter-spacing:.2px}
+.sec-head p{margin-left:auto;color:var(--mute);font-size:12.5px}
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 18px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.kpi .v{font-family:'DM Serif Display',serif;font-size:34px;color:var(--navy);line-height:1}
+.kpi .u{font-size:12px;color:var(--mute);font-weight:500}
+.kpi .l{font-size:12px;color:var(--mute);margin-top:8px;letter-spacing:.3px}
+.kpi.dark{background:var(--navy);border-color:var(--navy)}
+.kpi.dark .v,.kpi.dark .u{color:#fff} .kpi.dark .l{color:rgba(255,255,255,.7)} .kpi.dark::before{background:var(--gold)}
+/* table */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}
+thead th{background:var(--navy);color:#fff;font-weight:600;text-align:right;padding:12px 14px;font-size:12px;letter-spacing:.3px}
+thead th:first-child{text-align:left}
+tbody td{padding:12px 14px;border-top:1px solid var(--line);text-align:right;vertical-align:middle}
+tbody tr:nth-child(even){background:#fbfaf6}
+.kname{text-align:left;font-weight:600;color:var(--navy)}
+.num{font-variant-numeric:tabular-nums}
+.barcell{text-align:left;display:flex;align-items:center;gap:10px;min-width:120px}
+.barcell b{font-variant-numeric:tabular-nums;color:var(--navy)}
+.minibar{flex:1;height:8px;background:#eee7d8;border-radius:5px;overflow:hidden;min-width:70px}
+.minibar span{display:block;height:100%;border-radius:5px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-align:left;color:var(--navy)}
+.typ{text-align:left;color:var(--mute);font-size:12.5px}
+tfoot td{padding:11px 14px;font-size:12px;color:var(--mute);background:#faf8f2}
+/* two col */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+.panel h3{font-size:14px;color:var(--navy);margin-bottom:4px}
+.panel .cap{font-size:12px;color:var(--mute);margin-bottom:18px}
+/* dist */
+.drow{display:flex;align-items:center;gap:12px;margin:9px 0}
+.dlbl{width:88px;flex:0 0 88px;font-size:12.5px;color:var(--ink);font-weight:600}
+.dlbl em{font-style:normal;color:var(--mute);font-weight:400;font-size:11px}
+.dtrack{flex:1;height:14px;background:#f0ece1;border-radius:7px;overflow:hidden}
+.dtrack i{display:block;height:100%;border-radius:7px}
+.dval{width:74px;flex:0 0 74px;text-align:right;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.dval em{font-style:normal;color:var(--mute);font-weight:400}
+/* split */
+.split{display:flex;height:38px;border-radius:8px;overflow:hidden;margin:6px 0 14px;border:1px solid var(--line)}
+.split div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12.5px;font-weight:600}
+.legend{display:flex;gap:20px;font-size:12.5px;color:var(--mute)}
+.legend b{color:var(--ink)} .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+/* months */
+.months{display:flex;align-items:flex-end;gap:8px;height:200px;padding-top:10px}
+.mcol{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.mbarwrap{width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.mbar{width:72%;background:linear-gradient(180deg,var(--navy2),var(--navy));border-radius:6px 6px 0 0;position:relative;min-height:3px;display:flex;justify-content:center}
+.mbar span{position:absolute;top:-19px;font-size:11px;font-weight:600;color:var(--navy)}
+.mlab{font-size:10.5px;color:var(--mute);margin-top:8px;white-space:nowrap}
+.note{background:#fbf7ec;border:1px solid #ece0c2;border-left:3px solid var(--gold);border-radius:8px;padding:14px 18px;font-size:13px;color:#6a5a33;margin-top:16px}
+.footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--mute);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(max-width:900px){.side{display:none}.main{padding:30px 22px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}h1{font-size:30px}.months{overflow-x:auto}}
+</style></head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-name">Beacon<br>Surveys bv</div>
+      <div class="brand-sub">SEASON 2024–2025</div>
+    </div>
+    <nav class="nav">
+      <a href="#summary"><span class="n">01</span> Executive summary</a>
+      <a href="#keepers"><span class="n">02</span> By warehouse keeper</a>
+      <a href="#distribution"><span class="n">03</span> Delay distribution</a>
+      <a href="#process"><span class="n">04</span> Process step split</a>
+      <a href="#intake"><span class="n">05</span> Seasonal intake</a>
+      <a href="#outliers"><span class="n">06</span> Longest-running files</a>
+    </nav>
+    <div class="side-foot">
+      Warehouse keeper turnaround analysis · Cocoa season 2024/2025 · Port of Antwerp.<br><br>Prepared by Beacon Surveys bv.
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="eyebrow">Survey Operations · Cocoa 2024/2025</div>
+    <h1>Warehouse Keeper Turnaround Times</h1>
+    <p class="lede">Turnaround performance across the handling chain — <b>discharge → survey → sorting / back-in-stack → reconditioning</b> — for 314 cocoa files handled by 6 warehouse keepers at the Port of Antwerp.</p>
+    <div class="flow"></div>
+
+    <section id="summary">
+      <div class="sec-head"><span class="idx">01</span><h2>Executive summary</h2><p>All figures in calendar days</p></div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">314</div><div class="l">Files analysed</div></div>
+        <div class="kpi"><div class="v">6</div><div class="l">Warehouse keepers</div></div>
+        <div class="kpi"><div class="v">67 <span class="u">days</span></div><div class="l">Avg survey → sorting / BIS</div></div>
+        <div class="kpi"><div class="v">59 <span class="u">days</span></div><div class="l">Avg sorting → reconditioning</div></div>
+      </div>
+      <div class="kpis" style="margin-top:16px">
+        <div class="kpi"><div class="v">55 <span class="u">days</span></div><div class="l">Median survey → sorting</div></div>
+        <div class="kpi"><div class="v">311 <span class="u">days</span></div><div class="l">Longest single turnaround</div></div>
+        <div class="kpi dark"><div class="v">90 <span class="u">days</span></div><div class="l">Slowest keeper · CWT Commodities</div></div>
+        <div class="kpi"><div class="v">222</div><div class="l">Files reaching reconditioning</div></div>
+      </div>
+      <div class="note"><b>How to read this.</b> “Survey → sorting / BIS” is the delay between the survey date and the sorting or back-in-stack date. “Sorting → reconditioning” applies only to the 222 files that go through a reconditioning step; back-in-stack files end at step 2 and have no reconditioning delay.</div>
+    </section>
+
+    <section id="keepers">
+      <div class="sec-head"><span class="idx">02</span><h2>Turnaround by warehouse keeper</h2><p>Ranked by file volume</p></div>
+      <table>
+        <thead><tr><th>Warehouse keeper</th><th># files</th><th>BIS / sort</th><th>Avg survey→sort</th><th>Median</th><th>Max</th><th>Avg sort→recond</th><th>Max</th></tr></thead>
+        <tbody>
+    <tr>
+      <td class="kname">CWT Commodities (Antwerp) NV</td>
+      <td class="num">129</td>
+      <td class="num">13 / 114</td>
+      <td class="barcell"><div class="minibar"><span style="width:100%;background:#b3452f"></span></div><b>90</b></td>
+      <td class="num">82</td>
+      <td class="num">237</td>
+      <td class="num">71</td>
+      <td class="num">227</td>
+    </tr>
+    <tr>
+      <td class="kname">Katoen Natie Commodities</td>
+      <td class="num">53</td>
+      <td class="num">34 / 18</td>
+      <td class="barcell"><div class="minibar"><span style="width:66%;background:#c9a24b"></span></div><b>59</b></td>
+      <td class="num">45</td>
+      <td class="num">311</td>
+      <td class="num">59</td>
+      <td class="num">120</td>
+    </tr>
+    <tr>
+      <td class="kname">C. Steinweg Belgium NV</td>
+      <td class="num">51</td>
+      <td class="num">14 / 36</td>
+      <td class="barcell"><div class="minibar"><span style="width:51%;background:#4d7c5a"></span></div><b>46</b></td>
+      <td class="num">37</td>
+      <td class="num">117</td>
+      <td class="num">33</td>
+      <td class="num">105</td>
+    </tr>
+    <tr>
+      <td class="kname">Molenbergnatie NV</td>
+      <td class="num">42</td>
+      <td class="num">16 / 25</td>
+      <td class="barcell"><div class="minibar"><span style="width:51%;background:#4d7c5a"></span></div><b>46</b></td>
+      <td class="num">36</td>
+      <td class="num">101</td>
+      <td class="num">60</td>
+      <td class="num">161</td>
+    </tr>
+    <tr>
+      <td class="kname">Vollers Belgium NV</td>
+      <td class="num">20</td>
+      <td class="num">9 / 11</td>
+      <td class="barcell"><div class="minibar"><span style="width:51%;background:#4d7c5a"></span></div><b>46</b></td>
+      <td class="num">38</td>
+      <td class="num">145</td>
+      <td class="num">40</td>
+      <td class="num">92</td>
+    </tr>
+    <tr>
+      <td class="kname">Durme-Natie BV</td>
+      <td class="num">19</td>
+      <td class="num">2 / 17</td>
+      <td class="barcell"><div class="minibar"><span style="width:61%;background:#4d7c5a"></span></div><b>55</b></td>
+      <td class="num">35</td>
+      <td class="num">104</td>
+      <td class="num">46</td>
+      <td class="num">85</td>
+    </tr></tbody>
+        <tfoot><tr><td colspan="8">BIS = back-in-stack. Bars scale to the slowest keeper's average survey→sorting delay. Red ≥ 80 days · gold 55–79 · green &lt; 55.</td></tr></tfoot>
+      </table>
+    </section>
+
+    <section id="distribution">
+      <div class="sec-head"><span class="idx">03</span><h2>Delay distribution</h2><p>Share of files per delay band</p></div>
+      <div class="grid2">
+        <div class="panel"><h3>Survey → sorting / back-in-stack</h3><div class="cap">312 files · median 55 days</div><div class="drow"><span class="dlbl">≤14 <em>days</em></span>
+        <div class="dtrack"><i style="width:6.6%;background:#c9a24b"></i></div>
+        <span class="dval">5 <em>· 2%</em></span></div><div class="drow"><span class="dlbl">15–30 <em>days</em></span>
+        <div class="dtrack"><i style="width:68.4%;background:#c9a24b"></i></div>
+        <span class="dval">52 <em>· 17%</em></span></div><div class="drow"><span class="dlbl">31–45 <em>days</em></span>
+        <div class="dtrack"><i style="width:93.4%;background:#c9a24b"></i></div>
+        <span class="dval">71 <em>· 23%</em></span></div><div class="drow"><span class="dlbl">46–60 <em>days</em></span>
+        <div class="dtrack"><i style="width:46.1%;background:#c9a24b"></i></div>
+        <span class="dval">35 <em>· 11%</em></span></div><div class="drow"><span class="dlbl">61–90 <em>days</em></span>
+        <div class="dtrack"><i style="width:100.0%;background:#c9a24b"></i></div>
+        <span class="dval">76 <em>· 24%</em></span></div><div class="drow"><span class="dlbl">>90 <em>days</em></span>
+        <div class="dtrack"><i style="width:96.1%;background:#c9a24b"></i></div>
+        <span class="dval">73 <em>· 23%</em></span></div></div>
+        <div class="panel"><h3>Sorting → reconditioning</h3><div class="cap">222 files · median 51 days</div><div class="drow"><span class="dlbl">≤14 <em>days</em></span>
+        <div class="dtrack"><i style="width:45.5%;background:#16385f"></i></div>
+        <span class="dval">25 <em>· 11%</em></span></div><div class="drow"><span class="dlbl">15–30 <em>days</em></span>
+        <div class="dtrack"><i style="width:56.4%;background:#16385f"></i></div>
+        <span class="dval">31 <em>· 14%</em></span></div><div class="drow"><span class="dlbl">31–45 <em>days</em></span>
+        <div class="dtrack"><i style="width:56.4%;background:#16385f"></i></div>
+        <span class="dval">31 <em>· 14%</em></span></div><div class="drow"><span class="dlbl">46–60 <em>days</em></span>
+        <div class="dtrack"><i style="width:76.4%;background:#16385f"></i></div>
+        <span class="dval">42 <em>· 19%</em></span></div><div class="drow"><span class="dlbl">61–90 <em>days</em></span>
+        <div class="dtrack"><i style="width:100.0%;background:#16385f"></i></div>
+        <span class="dval">55 <em>· 25%</em></span></div><div class="drow"><span class="dlbl">>90 <em>days</em></span>
+        <div class="dtrack"><i style="width:69.1%;background:#16385f"></i></div>
+        <span class="dval">38 <em>· 17%</em></span></div></div>
+      </div>
+      <div class="note">Roughly 48% of files take more than 60 days from survey to sorting/back-in-stack, and 23% exceed 90 days — the long tail is concentrated in a small number of keepers and files.</div>
+    </section>
+
+    <section id="process">
+      <div class="sec-head"><span class="idx">04</span><h2>Process step split</h2><p>Route taken after survey</p></div>
+      <div class="panel">
+        <h3>Back-in-stack vs. sorting route</h3>
+        <div class="cap">Of 314 files, 88 went straight back-in-stack and 226 were sorted (and typically reconditioned).</div>
+        <div class="split">
+          <div style="width:28.0%;background:#0f2846">28%</div>
+          <div style="width:72.0%;background:#c9a24b">72%</div>
+        </div>
+        <div class="legend"><span><span class="dot" style="background:#0f2846"></span><b>88</b> back-in-stack</span><span><span class="dot" style="background:#c9a24b"></span><b>226</b> sorting / recon route</span></div>
+      </div>
+    </section>
+
+    <section id="intake">
+      <div class="sec-head"><span class="idx">05</span><h2>Seasonal intake</h2><p>Files opened per month</p></div>
+      <div class="panel">
+        <h3>File openings across the season</h3>
+        <div class="cap">Peak arrival window Dec 2024 – Mar 2025</div>
+        <div class="months"><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:1%"><span>1</span></div></div><div class="mlab">Jan 24</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:2%"><span>2</span></div></div><div class="mlab">Sep 24</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:5%"><span>4</span></div></div><div class="mlab">Nov 24</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:60%"><span>53</span></div></div><div class="mlab">Dec 24</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:72%"><span>63</span></div></div><div class="mlab">Jan 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:100%"><span>88</span></div></div><div class="mlab">Feb 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:77%"><span>68</span></div></div><div class="mlab">Mar 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:20%"><span>18</span></div></div><div class="mlab">Apr 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:9%"><span>8</span></div></div><div class="mlab">May 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:6%"><span>5</span></div></div><div class="mlab">Jun 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:2%"><span>2</span></div></div><div class="mlab">Jul 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:1%"><span>1</span></div></div><div class="mlab">Aug 25</div></div><div class="mcol"><div class="mbarwrap"><div class="mbar" style="height:1%"><span>1</span></div></div><div class="mlab">Sep 25</div></div></div>
+      </div>
+    </section>
+
+    <section id="outliers">
+      <div class="sec-head"><span class="idx">06</span><h2>Longest-running files</h2><p>Top survey→sorting delays</p></div>
+      <table>
+        <thead><tr><th>File ref</th><th>Warehouse keeper</th><th>Days</th><th>Step 3 type</th></tr></thead>
+        <tbody><tr><td class="mono">425025</td><td>Katoen Natie Commodities</td><td class="num"><b>311</b></td><td class="typ">back-in-stack</td></tr><tr><td class="mono">425033</td><td>Katoen Natie Commodities</td><td class="num"><b>308</b></td><td class="typ">back-in-stack</td></tr><tr><td class="mono">425319</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>237</b></td><td class="typ">sorting</td></tr><tr><td class="mono">425090</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>227</b></td><td class="typ">back-in-stack</td></tr><tr><td class="mono">425096</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>227</b></td><td class="typ">back-in-stack</td></tr><tr><td class="mono">425131</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>213</b></td><td class="typ">sorting</td></tr><tr><td class="mono">425202</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>210</b></td><td class="typ">Trial sort + recon</td></tr><tr><td class="mono">425222</td><td>CWT Commodities (Antwerp) NV</td><td class="num"><b>199</b></td><td class="typ">Trial sort + recon</td></tr></tbody>
+        <tfoot><tr><td colspan="4">The two longest cases (311 and 308 days) are back-in-stack files at Katoen Natie Commodities; the remaining outliers cluster at CWT Commodities.</td></tr></tfoot>
+      </table>
+    </section>
+
+    <div class="footer">
+      <span>Beacon Surveys bv · Cocoa season 2024/2025 · Port of Antwerp</span>
+      <span>Source: Beacon survey platform export</span>
+    </div>
+  </main>
+</div>
+</body></html>
